@@ -4,6 +4,7 @@ import chalk from 'chalk';
 import inquirer from 'inquirer';
 import chalkAnimation from 'chalk-animation';
 import { exec, execSync } from 'child_process';
+import fs from 'fs';
 
 const sleep = (ms = 2000) => new Promise((r) => setTimeout(r, ms));
 
@@ -57,7 +58,10 @@ function initProject() {
     const babelConfig = {
         "presets": ["@babel/preset-env", "@babel/preset-react"]
     }
-    execSync(`cd "${projectPath}" && echo ${JSON.stringify(babelConfig)} > .babelrc`, {stdio: 'inherit'})
+    fs.writeFile(`${projectPath}/.babelrc`, JSON.stringify(babelConfig), (err) => {
+        if (err) throw err;
+    });
+    console.log(chalk.italic("Babel file created!"))
 }
 
 await welcome()
