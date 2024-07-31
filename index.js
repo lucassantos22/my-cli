@@ -3,11 +3,23 @@
 import chalk from 'chalk';
 import inquirer from 'inquirer';
 import chalkAnimation from 'chalk-animation';
-import { exec } from 'child_process';
+import { exec, execSync } from 'child_process';
+import path from 'path';
 
 const sleep = (ms = 2000) => new Promise((r) => setTimeout(r, ms));
 
 let projectName = null
+let currentPath = process.cwd()
+
+const runCommand = (command, obj) => {
+    try {
+        execSync(command, {stdio: 'inherit', ...obj})
+    } catch (err) {
+        console.log(`Failed to run command ${command}`, err)
+        return false
+    }
+    return true;
+}
 
 async function welcome() {
     const title = chalkAnimation.karaoke("Welcome to the caslu's CLI!");
@@ -31,7 +43,7 @@ async function askProjectName() {
 }
 
 function createProject() {
-    exec(`mkdir -p ~/${projectName}`, async (error, stderr) => {
+    exec(`mkdir -p ${currentPath}/${projectName}`, async (error, stderr) => {
         if (error) {
             console.log(`error: ${error.message}`);
             return;
@@ -44,21 +56,11 @@ function createProject() {
 
 
 function initProject() {
-    exec(`npx init -y ~/${projectName}`, (error, stdout, stderr) => {
-        if (error) {
-            console.log(`error: ${error.message}`);
-            return
-        }
-        if (stderr) {
-            console.log(`stderr: ${stderr}`);
-        }
-        console.log("==Tudo pronto para começar==")
-    });
+    const command2 = runCommand('npm i express', {cwd: `${currentPath}/${projectName}`})
     return
-    exec(`cd ~/${projectName} | sudo npm install ffi`).stderr.pipe(process.stderr);
 }
 
-
+console.log(currentPath)
 await welcome()
 await askProjectName()
 createProject()
