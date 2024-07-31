@@ -1,0 +1,27 @@
+{
+  "name": "my-cli",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "exec": "node ."
+  },
+  "type": "module",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bin": {
+    "my-cli": "index.js"
+  },
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "chalk-animation": "^2.0.3",
+    "child_process": "^1.0.2",
+    "gradient-string": "^2.0.2",
+    "inquirer": "^10.1.5"
+  },
+  "devDependencies": {
+    "mocha": "^10.7.0"
+  },
+  "description": ""
+}
