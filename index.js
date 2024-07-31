@@ -48,8 +48,16 @@ function createProject() {
 
 function initProject() {
     execSync(`cd "${projectPath}" && npm init -y`, {stdio: 'inherit'})
+    console.log(chalk.italic("Project started!"))
+
     execSync(`cd "${projectPath}" && npm install react react-dom`, {stdio: 'inherit'})
+    console.log(chalk.italic("react & router-dom installed!"))
+
     execSync(`cd "${projectPath}" && npm install --save-dev @babel/core @babel/preset-env @babel/preset-react babel-loader`, {stdio: 'inherit'})
+    const babelConfig = {
+        "presets": ["@babel/preset-env", "@babel/preset-react"]
+    }
+    execSync(`cd "${projectPath}" && echo ${JSON.stringify(babelConfig)} > .babelrc`, {stdio: 'inherit'})
 }
 
 await welcome()
