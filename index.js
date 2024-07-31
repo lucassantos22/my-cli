@@ -13,7 +13,8 @@ let currentPath = process.cwd()
 
 const runCommand = (command, obj) => {
     try {
-        execSync(command, {stdio: 'inherit', ...obj})
+        const config = {stdio: 'inherit', ...obj}
+        execSync(command, config)
     } catch (err) {
         console.log(`Failed to run command ${command}`, err)
         return false
@@ -56,11 +57,10 @@ function createProject() {
 
 
 function initProject() {
-    const command2 = runCommand('npm i express', {cwd: `${currentPath}/${projectName}`})
-    return
+    const success = runCommand(`cd "${currentPath}/${projectName}" && npm init -y`)
+    if (!success) return;
 }
 
-console.log(currentPath)
 await welcome()
 await askProjectName()
 createProject()
