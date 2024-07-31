@@ -62,6 +62,11 @@ function initProject() {
     fs.copyFile('./configs/webpack.config.js', `${projectPath}/webpack.config.js`, (err) => {
         if (err) throw err;
     });
+    execSync(`cd "${projectPath}" && mkdir public`, {stdio: 'inherit'})
+    execSync(`cd "${projectPath}" && mkdir src`, {stdio: 'inherit'})
+    fs.copyFile('./configs/index.html', `${projectPath}/public/index.html`, (err) => {
+        if (err) throw err;
+    });
 }
 
 await welcome()
