@@ -58,6 +58,10 @@ function initProject() {
         if (err) throw err;
     });
     execSync(`cd "${projectPath}" && npm install --save-dev webpack webpack-cli webpack-dev-server html-webpack-plugin css-loader style-loader`, {stdio: 'inherit'})
+
+    fs.copyFile('./configs/webpack.config.js', `${projectPath}/webpack.config.js`, (err) => {
+        if (err) throw err;
+    });
 }
 
 await welcome()
