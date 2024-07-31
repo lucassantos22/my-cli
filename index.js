@@ -9,17 +9,7 @@ const sleep = (ms = 2000) => new Promise((r) => setTimeout(r, ms));
 
 let projectName = null
 let currentPath = process.cwd()
-
-const runCommand = (command, obj) => {
-    try {
-        const config = {stdio: 'inherit', ...obj}
-        execSync(command, config)
-    } catch (err) {
-        console.log(`Failed to run command ${command}`, err)
-        return false
-    }
-    return true;
-}
+let projectPath = null
 
 async function welcome() {
     const title = chalkAnimation.karaoke("Welcome to the caslu's CLI!");
@@ -43,7 +33,8 @@ async function askProjectName() {
 }
 
 function createProject() {
-    exec(`mkdir -p ${currentPath}/${projectName}`, async (error, stderr) => {
+    projectPath = `${currentPath}/${projectName}`
+    exec(`mkdir -p ${projectPath}`, async (error, stderr) => {
         if (error) {
             console.log(`error: ${error.message}`);
             return;
@@ -56,8 +47,9 @@ function createProject() {
 
 
 function initProject() {
-    const success = runCommand(`cd "${currentPath}/${projectName}" && npm init -y`)
-    if (!success) return;
+    execSync(`cd "${projectPath}" && npm init -y`, {stdio: 'inherit'})
+    execSync(`cd "${projectPath}" && npm install react react-dom`, {stdio: 'inherit'})
+    execSync(`cd "${projectPath}" && npm install --save-dev @babel/core @babel/preset-env @babel/preset-react babel-loader`, {stdio: 'inherit'})
 }
 
 await welcome()
