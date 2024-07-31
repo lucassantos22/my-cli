@@ -70,6 +70,9 @@ function initProject() {
     fs.copyFile('./configs/index.js', `${projectPath}/src/index.js`, (err) => {
         if (err) throw err;
     });
+    fs.copyFile('./configs/App.js', `${projectPath}/src/App.js`, (err) => {
+        if (err) throw err;
+    });
 }
 
 await welcome()
