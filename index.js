@@ -3,7 +3,7 @@
 import chalk from 'chalk';
 import inquirer from 'inquirer';
 import chalkAnimation from 'chalk-animation';
-import { exec, execSync } from 'child_process';
+import shell from 'shelljs'
 import fs from 'fs';
 
 const sleep = (ms = 2000) => new Promise((r) => setTimeout(r, ms));
@@ -33,37 +33,31 @@ async function askProjectName() {
     projectName = answers.projectName.replaceAll(' ', '_')
 }
 
-function createProject() {
+async function createProject() {
     projectPath = `${currentPath}/${projectName}`
-    exec(`mkdir -p ${projectPath}`, async (error, stderr) => {
-        if (error) {
-            console.log(`error: ${error.message}`);
-            return;
-        }
-        if (stderr) return;
-        await sleep();
-        initProject()
-    });
+    shell.exec(`mkdir -p ${projectPath}`)
+    await sleep();
+    initProject()
 }
 
 
 function initProject() {
-    execSync(`cd "${projectPath}" && npm init -y`, {stdio: 'inherit'})
-    execSync(`cd "${projectPath}" && npm install react react-dom`, {stdio: 'inherit'})
-    execSync(`cd "${projectPath}" && npm install --save-dev @babel/core @babel/preset-env @babel/preset-react babel-loader`, {stdio: 'inherit'})
+    shell.exec(`cd "${projectPath}" && npm init -y`)
+    shell.exec(`cd "${projectPath}" && npm install react react-dom`)
+    shell.exec(`cd "${projectPath}" && npm install --save-dev @babel/core @babel/preset-env @babel/preset-react babel-loader`)
     const babelConfig = {
         "presets": ["@babel/preset-env", "@babel/preset-react"]
     }
     fs.writeFile(`${projectPath}/.babelrc`, JSON.stringify(babelConfig), (err) => {
         if (err) throw err;
     });
-    execSync(`cd "${projectPath}" && npm install --save-dev webpack webpack-cli webpack-dev-server html-webpack-plugin css-loader style-loader`, {stdio: 'inherit'})
+    shell.exec(`cd "${projectPath}" && npm install --save-dev webpack webpack-cli webpack-dev-server html-webpack-plugin css-loader style-loader`)
 
     fs.copyFile('./configs/webpack.config.js', `${projectPath}/webpack.config.js`, (err) => {
         if (err) throw err;
     });
-    execSync(`cd "${projectPath}" && mkdir public`, {stdio: 'inherit'})
-    execSync(`cd "${projectPath}" && mkdir src`, {stdio: 'inherit'})
+    shell.exec(`cd "${projectPath}" && mkdir public`)
+    shell.exec(`cd "${projectPath}" && mkdir src`)
     fs.copyFile('./configs/index.html', `${projectPath}/public/index.html`, (err) => {
         if (err) throw err;
     });
